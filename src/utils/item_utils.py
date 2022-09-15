@@ -4,11 +4,13 @@ import sqlalchemy as sa
 from datetime import datetime, timedelta
 from sqlalchemy.ext.asyncio import AsyncSession
 from fastapi.exceptions import RequestValidationError
+# ----------------------------------------------------------------------------------------------------------------------
 
 # Import modules
 from models.db_items import SystemItem,SystemItemHistory
 from models.pyd_items import SystemItemImportRequest, SystemItemGetNode, \
     SystemItemHistoryResponse, SystemItemHistoryUnit
+# ----------------------------------------------------------------------------------------------------------------------
 
 
 class ItemNotFoundError(Exception):
@@ -159,10 +161,9 @@ async def get_nodes_by_model(session: AsyncSession, db_item: SystemItem) -> Syst
     item_node = SystemItemGetNode(**db_item_dict, children=None)
 
     if db_item.itemtype == "FILE":
-
+        # If file, return itself
         return item_node
     else:
-
         # Init children list
         item_node.children = []
 
@@ -209,7 +210,7 @@ async def get_item_history_db(session: AsyncSession, id: str,
     if db_item is None:
         raise ItemNotFoundError()
 
-    # Get full history from DB
+    # Get full history of item from DB
     state = sa.select(SystemItemHistory)\
         .where(SystemItemHistory.item_id == id)\
         .where(SystemItemHistory.date >= date_start)\

@@ -1,5 +1,6 @@
 # Import libs
 import iso8601
+
 from fastapi import Depends, Query, Response
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
@@ -8,12 +9,16 @@ from fastapi_restful.cbv import cbv
 from fastapi_restful.inferring_router import InferringRouter
 
 from sqlalchemy.ext.asyncio import AsyncSession
+# ----------------------------------------------------------------------------------------------------------------------
+
 
 # Import modules
 from models.pyd_items import SystemItemImport, SystemItemImportRequest, \
     SystemItemGetNode, SystemItemHistoryResponse, Error
 from utils.db import get_session
 from utils.item_utils import import_items, delete_item, get_nodes, get_recent_updated_files, get_item_history_db
+# ----------------------------------------------------------------------------------------------------------------------
+
 
 item_router = InferringRouter()
 
@@ -83,7 +88,7 @@ class ItemCBV:
                                "model": Error},
                      },
                      )
-    async def get_updated_items(self, date: str = Query(...)):
+    async def get_updated_items(self, date: str = Query(...)) -> SystemItemHistoryResponse:
         # Try out to parse datetime
         try:
             date = iso8601.parse_date(date)
@@ -107,7 +112,7 @@ class ItemCBV:
     async def get_item_history(self, id: str,
                                date_start: str = Query(None, alias="dateStart"),
                                date_end: str = Query(None, alias="dateEnd")
-                               ):
+                               ) -> SystemItemHistoryResponse:
         # Try out to parse datetime
         try:
             date_start = iso8601.parse_date(date_start)
