@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+
+
+  postgres:
+    container_name: postgres_container
+    image: postgres:13.3
+    environment:
+      POSTGRES_DB: "itemdb"
+      POSTGRES_USER: "gregory"
+      POSTGRES_PASSWORD: "qazedctgb"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./utils/:/docker-entrypoint-initdb.d
+      - .:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - postgres
+
+
+  pgadmin:
+    container_name: pgadmin_container
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "greg@kek.com"
+      PGADMIN_DEFAULT_PASSWORD: "qazedctgb"
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_LISTEN_PORT: "5050"
+    volumes:
+      - ./pgadmin:/var/lib/pgadmin
+    expose:
+      - "5050"
+    ports:
+      - "5050:5050"
+    networks:
+      - postgres
+
+  itemapp:
+    container_name: itemapp_container
+    build: src/
+    restart: always
+    ports:
+      - "80:80"
+    environment:
+      TZ: Europe/Moscow
+      DATABASE_URI: "postgresql+asyncpg://gregory:qazedctgb@host.docker.internal:5432/itemdb"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+volumes:
+  postgres_container:
+
+networks:
+  postgres:
+    driver: bridge

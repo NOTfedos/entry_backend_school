@@ -1,0 +1,8 @@
+pydantic~=1.9.2
+SQLAlchemy~=1.4.27
+uvicorn~=0.18.3
+fastapi~=0.80.0
+fastapi-restful~=0.4.3
+asyncpg
+typer
+iso8601~=1.0.2
