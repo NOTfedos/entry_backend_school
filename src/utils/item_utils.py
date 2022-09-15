@@ -220,6 +220,8 @@ async def get_item_history_db(session: AsyncSession, id: str,
     # Put query to pydantic response model
     resp = SystemItemHistoryResponse(items=[])
     for item in history:
-        resp.items.append(SystemItemHistoryUnit(**item._asdict()))
+        item_dict = item._asdict()
+        item_dict["id"] = item_dict.pop("item_id")
+        resp.items.append(SystemItemHistoryUnit(**item_dict))
 
     return resp

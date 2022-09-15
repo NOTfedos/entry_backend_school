@@ -69,15 +69,15 @@ class SystemItemGetNode(BaseModel):
             datetime: lambda v: v.strftime("%Y-%m-%dT%H:%M:%SZ")
         }
 
+    @root_validator
+    def validate_date(cls, values):
+        values['date'] = iso8601.parse_date(values['date'].isoformat())
+        return values
+
 
 class SystemItemImportRequest(BaseModel):
     items: list[SystemItemImport]
     update_date: datetime = Field(..., alias="updateDate")
-
-    # class Config:
-    #     json_encoders = {
-    #         datetime: lambda v: iso8601.parse_date(v),
-    #     }
 
     @validator('update_date', pre=True)
     def time_validate(cls, v):
@@ -109,10 +109,10 @@ class SystemItemHistoryUnit(BaseModel):
             datetime: lambda v: v.strftime("%Y-%m-%dT%H:%M:%SZ")
         }
 
-    # @root_validator
-    # def validate_date(cls, values):
-    #     values['date'] = iso8601.parse_date(values['date'].isoformat())
-    #     return values
+    @root_validator
+    def validate_date(cls, values):
+        values['date'] = iso8601.parse_date(values['date'].isoformat())
+        return values
 
 
 class Error(BaseModel):
