@@ -6,3 +6,4 @@ fastapi-restful~=0.4.3
 asyncpg
 typer
 iso8601~=1.0.2
+aiomisc
